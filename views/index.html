@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #input:focus {
+        outline: none;
+      }
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+
+      .typing-indicator {
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input
+        id="input"
+        autocomplete="off"
+        placeholder="Type your message..."
+      /><button>Send</button>
+    </form>
+    <div id="typing-indicator" class="typing-indicator"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var messages = document.getElementById("messages");
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+      var typingIndicator = document.getElementById("typing-indicator");
+      var senderName = "";
+
+      var timeout = null;
+
+      // Ask for the user's name
+      senderName = prompt("Enter your name:");
+      // Add event listener to the form submit event
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit("msg", { sender: senderName, message: input.value });
+          input.value = "";
+        }
+      });
+
+      input.addEventListener("keyup", function () {
+  clearTimeout(timeout);
+  socket.emit("typing", senderName);
+  timeout = setTimeout(function () {
+    socket.emit("stopTyping");
+    typingIndicator.textContent = "";
+  }, 1000); // Adjust the delay as needed
+});
+
+
+   
+
+      // Handle incoming messages from the server
+      socket.on("msg", function (data) {
+        var item = document.createElement("li");
+        item.textContent = data.sender + ": " + data.message;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+     // Handle incoming typing event from the server
+socket.on("typing", function (data) {
+  typingIndicator.textContent = data + " is typing...";
+  window.scrollTo(0, document.body.scrollHeight);
+
+  clearTimeout(timeout);
+  timeout = setTimeout(function () {
+    typingIndicator.textContent = "";
+  }, 3000); // Duration for the typing message to remain visible
+});
+// Handle incoming messages from the server
+socket.on("msg", function (data) {
+  var item = document.createElement("li");
+  var messageText = data.sender + ": " + data.message;
+  item.textContent = messageText;
+
+  // Add modify and delete buttons
+ // Add modify and delete buttons
+var modifyButton = document.createElement("button");
+modifyButton.textContent = "Modify";
+modifyButton.addEventListener("click", function () {
+  var modifiedMessage = prompt("Modify the message:", messageText);
+  if (modifiedMessage) {
+    socket.emit("modify", { messageId: data.messageId, message: modifiedMessage }); // Use data.messageId here
+  }
+});
+
+
+  var deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", function () {
+    if (confirm("Are you sure you want to delete this message?")) {
+        socket.emit("delete", { messageId: data.messageId });
+    }
+  });
+
+  item.appendChild(modifyButton);
+  item.appendChild(deleteButton);
+
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
+ // Handle modify event
+ socket.on("modify", ({ messageId, message }) => {
+    console.log("Modify event received with messageId:", messageId);
+
+    // Find the message with the given messageId and update its content
+    const index = messages.findIndex((message) => message.id === messageId);
+    if (index !== -1) {
+      const modifiedMessage = messages[index];
+      modifiedMessage.message = message;
+      io.emit("modified", { messageId: modifiedMessage.id, message });
+    }
+});
+
+  // Handle incoming deleted messages from the server
+  socket.on("deleted", function (data) {
+    var messageItem = document.querySelector(`[data-message-id="${data._id}"]`);
+    if (messageItem) {
+      messageItem.remove();
+    }
+  });
+
+    </script>
+  </body>
+</html>
