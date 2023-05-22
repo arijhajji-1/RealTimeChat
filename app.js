@@ -12,6 +12,12 @@ const mongoconnection = require("./config/mongoconnection.json");
 const { add, modify, remove } = require("./controller/chatController");
 
 const server = http.createServer(app);
+
+// emit is used to send events, 
+//socket.on is used to listen for events, 
+//io represents the socket.io server,
+// socket represents an individual client's socket connection, 
+//and broadcast is used to emit events to all connected clients except the sender.
 const io = require("socket.io")(server);
 mongoose.connect(mongoconnection.url, {
   useNewUrlParser: true,

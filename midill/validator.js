@@ -7,13 +7,12 @@ const validate = async function (req, res, next) {
        
         
         plat_name :yup.string().max(8, 'Plat name must not exceed 8 characters').required('Plat name is required')
-        // it should  be unique
         .test('checkPlatName', 'Plat name already exists', async (value) => {
             const plat = await Plat.findOne({ plat_name: value });
             if (plat) return false;
             return true;
             }),
-            
+
        
 
         nbre_ingredient:yup.number().positive().max(5, 'Nbre ingredient must not exceed 5 characters'),   

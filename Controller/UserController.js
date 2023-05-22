@@ -18,6 +18,7 @@ exports.add= async (req,res)=>
                 email: req.body.email,
                 cin: req.body.cin,
                 image: req.file.originalname,
+                
             }
         );
         await newuser.save();
