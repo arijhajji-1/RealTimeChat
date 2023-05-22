@@ -16,6 +16,7 @@ const {
 
 } = require("../Controller/UserController");
 const multer = require("multer");
+const  validate  = require("../midill/Validate");
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public");
@@ -27,7 +28,7 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage });
-router.post("/add", upload.single("image"), add);
+router.post("/add", upload.single("image"),validate,add);
 router.get("/get", getOne);
 router.put("/modify/:id", modify);
 router.delete("/remove/:id", remove);

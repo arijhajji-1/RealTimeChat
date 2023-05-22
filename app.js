@@ -26,8 +26,10 @@ db.once("open", function () {
 });
 
 const UserRouter = require("./routes/user");
+const PlatRouter = require ("./routes/plat");
+app.use("/plat", PlatRouter);
 
-
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use("/user", UserRouter);
 
 

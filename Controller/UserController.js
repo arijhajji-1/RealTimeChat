@@ -5,8 +5,7 @@ const express = require('express');
 const user = require('../models/user');
 const router = express.Router();
 
-// user controller crud
-//not router
+
 //add
 
 exports.add= async (req,res)=>
