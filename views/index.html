@@ -59,6 +59,8 @@
     </style>
   </head>
   <body>
+    <div id="notifications"></div>
+
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" placeholder="Type your message..." />
@@ -87,7 +89,7 @@
           input.value = "";
         }
       });
-
+   
       input.addEventListener("keyup", function () {
         clearTimeout(timeout);
         socket.emit("typing", senderName);
@@ -111,6 +113,19 @@
       });
 
    
+      var notifications = document.getElementById("notifications");
+
+// Handle incoming notification event from the server
+// Handle incoming notification event from the server
+socket.on("notification", function (data) {
+  // Show the notification as a pop-up
+  alert(data.message);
+});
+
+// Send a hello notification to the server
+socket.emit("notification", { message: "Hello" });
+
+// Send a hello notification to the server
 
       // Handle incoming typing event from the server
       socket.on("typing", function (data) {

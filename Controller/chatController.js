@@ -43,22 +43,16 @@ async function add(data) {
   
   
   
-  async function remove(messageId) {
-    try {
-      const deletedChat = await chat.findByIdAndRemove(messageId);
-  
-      if (deletedChat) {
-        console.log("Remove success");
-      } else {
-        console.log("Message with messageId " + messageId + " does not exist");
-      }
-    } catch (err) {
-      console.log({ error: err.toString() });
-    }
-  }
-  
+  async function deleteMessage(id) {
+    console.log("Deleting message...");
+   
+        await Message.deleteOne({_id: id});
+        return id;
+      
+}
+
   
   
   
 
-module.exports = { add, modify, remove };
+module.exports = { add, modify,deleteMessage };

@@ -57,9 +57,13 @@ io.on("connection", (socket) => {
       add(data);
       io.emit("msg", data);
     }
+    
   });
-
  
+  socket.on("notification", (data) => {
+    io.emit("notification", data);
+  });
+  
 
   socket.on("disconnect", () => {
     io.emit("msg", { sender: "Server", message: "A user is disconnected" });
