@@ -12,7 +12,8 @@ const {
     getByEmail,
     getByCin,
     getById,
-    getByName
+    getByName,
+    getAll
 
 } = require("../Controller/UserController");
 const multer = require("multer");
@@ -30,7 +31,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 router.post("/add", upload.single("image"),validate,add);
 router.get("/get", getOne);
-router.put("/modify/:id", modify);
+router.get("/getAll", getAll);
+router.put("/modify/:id", upload.single("image") ,modify);
 router.delete("/remove/:id", remove);
 router.get("/getbyid/:id", getById);
 router.get("/getbyname/:name", getByName);

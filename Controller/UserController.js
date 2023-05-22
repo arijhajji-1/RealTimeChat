@@ -33,34 +33,43 @@ exports.add= async (req,res)=>
        
     }
 }
-//modify
-exports.modify= async (req,res)=>
-{
-    try{
-        const id = req.params.id;
-        const result = await user.updateOne({_id:id},{$set:{...req.body}});
-        if(result.nModified===0)
-        {
-            res.send({message:"user is already updated"});
-            return;
-        }
-        res.send({message:"user is updated"});
+//update a user by id
+
+exports.modify = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const updatedUser = {
+        name: req.body.name,
+        email: req.body.email,
+        cin: req.body.cin,
+        image: req.file.originalname,
+        telephone: req.body.telephone
+      };
+  
+      const result = await user.updateOne({ _id: id }, updatedUser);
+      
+      if (result.nModified === 0) {
+        return res.status(404).send({ message: "User not found or no changes applied." });
+      }
+      
+      res.send({ message: "User is modified successfully." });
+    } catch (error) {
+        console.error(error); // Log the error message
+
+      res.status(500).send({ message: "An error occurred while updating the user." });
     }
-    catch(error){
-        res.send({message:"there is no user with this id"});
-    }
-}
+  };
+  
+
+
+
 //remove
 exports.remove= async (req,res)=>
 {
     try{
         const id = req.params.id;
         const result = await user.deleteOne({_id:id});
-        if(result.deletedCount===0)
-        {
-            res.send({message:"user is already deleted"});
-            return;
-        }
+    
         res.send({message:"user is deleted"});
     }
     catch(error){

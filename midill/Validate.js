@@ -38,6 +38,11 @@ telephone: yup
   }
   return false;
 }),
+//color: yup.string().oneOf(['red', 'green', 'blue'], 'Invalid color'),
+//  address: yup.string().nullable(),
+//  postalCode: yup.string().matches(/^\d{5}$/, 'Invalid postal code'),
+
+
 
     });
     await schema.validate(req.body, { abortEarly: false });
