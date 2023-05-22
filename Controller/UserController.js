@@ -150,3 +150,15 @@ exports.getById= async (req,res)=>
         res.send({message:"there is no user with this id"});
     }
 }
+//delete all
+exports.removeAll= async (req,res)=>
+{
+    try{
+        const result = await user.deleteMany();
+        res.send({message:"users are deleted"});
+    }
+    catch(error){
+        res.send({message:"there is no user"});
+    }
+}
+

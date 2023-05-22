@@ -13,7 +13,8 @@ const {
     getByCin,
     getById,
     getByName,
-    getAll
+    getAll,
+    removeAll
 
 } = require("../Controller/UserController");
 const multer = require("multer");
@@ -38,6 +39,7 @@ router.get("/getbyid/:id", getById);
 router.get("/getbyname/:name", getByName);
 router.get("/getbyemail/:email", getByEmail);
 router.get("/getbycin/:cin", getByCin);
+router.delete("/deleteAll",removeAll);
 
 
 module.exports = router;
