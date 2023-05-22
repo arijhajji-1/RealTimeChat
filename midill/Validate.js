@@ -5,22 +5,20 @@ const validate = async function (req, res, next) {
       name: yup.string().required('Name is required'),
       email: yup.string().email().required('Email is required'),
       cin: yup.string().required('Cin is required'),
-//only jpg png and jpeg allowed 
-image: yup.string().test('file-type', 'File type is not allowed', (value) => {
-        const extension = ['jpg', 'png', 'jpeg'];
-        const ext = value.split('.').pop().toLowerCase();
-        return extension.includes(ext);
-        }),
 
       image: yup.string().test('is-valid-file', 'Image is required', function(value) {
         return !!req.file && !!req.file.originalname;
-        
-      }).test('file-type', 'File type is not allowed', (value) => {
-        const extension = ['jpg', 'png', 'jpeg'];
-        const ext = value.split('.').pop().toLowerCase();
-        return extension.includes(ext);
-        }),
-      
+      })
+.test('is-valid-file-type', 'Image is not valid', function(value) {
+  return (
+
+    req.file.mimetype === 'image/png' ||
+    req.file.mimetype === 'image/jpg' ||
+    req.file.mimetype === 'image/jpeg'
+
+  );
+})
+
 
 
 

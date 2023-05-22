@@ -1,4 +1,5 @@
 
+const fs = require('fs');
 
 
 const express = require('express');
@@ -23,9 +24,12 @@ exports.add= async (req,res)=>
         );
         await newuser.save();
         res.send({response:newuser, message:"user is saved"});
+       
     }
     catch(error){
+    
         res.send({message:"can not save user"});
+       
     }
 }
 //modify
