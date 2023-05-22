@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 async function add(data) {
     try {
       const message = data.message; // Extract the 'message' property from the 'data' object
+      const newMessageId = new mongoose.Types.ObjectId();
       const Chat = new chat({
         msg: message,
         date: new Date(),
+        messageId: newMessageId
       });
       await Chat.save();
       console.log("Add success");
@@ -14,38 +16,48 @@ async function add(data) {
       console.log({ error: err.toString() });
     }
   }
-  async function modify(messageId, message) {
+  //modify
+  async function modify(data) {
     try {
-      const updatedMessage = await chat.findOneAndUpdate(
-        { _id: messageId },
-        { message: message },
+      console.log("Inside modify function");
+  
+      const messageId = data.messageId;
+      const message = data.message;
+  
+      console.log("Message ID:", messageId);
+      console.log("New message:", message);
+  
+      const updatedChat = await chat.findByIdAndUpdate(
+        messageId,
+        { msg: message },
         { new: true }
       );
-      if (updatedMessage) {
-        console.log("Modify success");
-        console.log("Updated Message:", updatedMessage);
-      } else {
-        console.log("Message not found");
-      }
+  
+      console.log("Updated chat:", updatedChat);
+  
+      return updatedChat;
     } catch (err) {
       console.log({ error: err.toString() });
     }
   }
+  
   
   
   async function remove(messageId) {
     try {
-      const removedMessage = await chat.findByIdAndRemove(messageId);
-      if (removedMessage) {
+      const deletedChat = await chat.findByIdAndRemove(messageId);
+  
+      if (deletedChat) {
         console.log("Remove success");
-        console.log("Removed Message:", removedMessage);
       } else {
-        console.log("Message not found");
+        console.log("Message with messageId " + messageId + " does not exist");
       }
     } catch (err) {
       console.log({ error: err.toString() });
     }
   }
+  
+  
   
   
 
