@@ -15,8 +15,12 @@ const validate = async function (req, res, next) {
 
        
 
+
         nbre_ingredient:yup.number().positive().max(5, 'Nbre ingredient must not exceed 5 characters'),   
         description:yup.string().matches(/^[a-zA-Z]+$/).required('Description is required'),
+       
+        
+        
       
      
     });

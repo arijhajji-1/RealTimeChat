@@ -6,5 +6,6 @@ var User = new schema({
     email: String,
     cin: Number,
     image: String,
+    telephone: Number,
 }); 
 module.exports = mongo.model("user", User)
